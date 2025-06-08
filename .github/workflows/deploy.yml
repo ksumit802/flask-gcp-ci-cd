@@ -27,6 +27,13 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker
 
+      - name: Docker login to Artifact Registry
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > key.json
+          gcloud auth activate-service-account --key-file=key.json
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+
+
       - name: Build Docker image
         run: |
           docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/flask-images/flask-app:latest .
