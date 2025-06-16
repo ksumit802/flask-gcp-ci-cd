@@ -1,17 +1,13 @@
-# Use an official Python runtime as a base image
 FROM python:3.10-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy everything into the container
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
-# Install Flask
-RUN pip install flask
-
-# Expose port 8080 to the outside
+ENV PORT 8080
 EXPOSE 8080
 
-# Run the app
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
